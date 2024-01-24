@@ -47,6 +47,23 @@ playerSchema.virtual('birthdate')
         }
     })
 
+// playerSchema.pre('save', async function () {
+//     this.dob = `${this.dob.slice(0, 4)}-${this.dob.slice(4, 6)}-${this.dob.slice(6, 8)}`;
+//     console.log(this.dob);
+// })
+// actually pre save hook won't get triggered, need to use pre insertMany hook, 
+// since in seeds we're using insertMany, not using save method on each individual document
+// be aware, when using a pre insertMany hook, "this" would refer to the model, not the document
+playerSchema.pre('insertMany', async function (next, docs) {
+    for (let doc of docs) {
+        const dob = doc.dob;
+        if (dob) {
+            doc.dob = `${dob.slice(0, 4)}-${dob.slice(4, 6)}-${dob.slice(6, 8)}`;
+        }
+    }
+    next(); // i think if i don't call this, any potential other middleware won't run after this one
+})
+
 const Player = mongoose.model('Player', playerSchema);
 
 module.exports = Player;
