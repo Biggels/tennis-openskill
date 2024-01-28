@@ -1,3 +1,4 @@
+// TODO decide how to keep data in sync...git subtrees or something like that?
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -35,6 +36,7 @@ app.get('/players', async (req, res) => {
 app.get('/players/:id', async (req, res) => {
     const { id } = req.params;
     const player = await Player.findOne({ player_id: id });
+    // TODO handle failure to find player with that id (missing player page with a button to go home? just redirect home?)
     const title = player.fullName;
 
     res.render('players/show', { title, player });

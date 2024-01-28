@@ -54,15 +54,30 @@ playerSchema.virtual('birthdate')
 // actually pre save hook won't get triggered, need to use pre insertMany hook, 
 // since in seeds we're using insertMany, not using save method on each individual document
 // be aware, when using a pre insertMany hook, "this" would refer to the model, not the document
-playerSchema.pre('insertMany', async function (next, docs) {
+playerSchema.pre('insertMany', function (next, docs) {
     for (let doc of docs) {
-        const dob = doc.dob;
-        if (dob) {
-            doc.dob = `${dob.slice(0, 4)}-${dob.slice(4, 6)}-${dob.slice(6, 8)}`;
+        if (doc.dob) {
+            // there's a player whose dob is 19000000, which won't be valid date, so we'll set any like that to XXXX0101 instead
+            if (doc.dob.slice(4).startsWith('00') || doc.dob.slice(6).startsWith('00')) {
+                doc.dob = doc.dob.slice(0, 4) + '0101';
+            }
+            doc.dob = `${doc.dob.slice(0, 4)}-${doc.dob.slice(4, 6)}-${doc.dob.slice(6, 8)}`;
         }
     }
     next(); // i think if i don't call this, any potential other middleware won't run after this one
 })
+
+// insertMany says it validates every document, but i guess that doesn't trigger validate middleware? that makes no sense...
+// playerSchema.pre('validate', function (next) {
+//     // there's a player whose dob is 19000000, which won't be valid date, so we'll set any like that to XXXX0101 instead
+//     console.log('hello from pre validate hook');
+//     if (this.dob) {
+//         if (this.dob.slice(4).startsWith('00') || this.dob.slice(6).startsWith('00')) {
+//             this.dob = this.dob.slice(0, 4) + '0101';
+//         }
+//     }
+//     next();
+// })
 
 const Player = mongoose.model('Player', playerSchema);
 

@@ -1,5 +1,6 @@
 <%- include('../partials/head') %>
 
+<!-- TODO add data from wikidata api using the wikidata_id (https://www.mediawiki.org/wiki/Wikibase/API) -->
 <h1><%= player.fullName %></h1>
 
 <ul>
@@ -7,7 +8,8 @@
     <li>birthdate: <%= player.birthdate %></li>
     <li>ioc: <%= player.ioc %></li>
     <li>height: <%= player.height %></li>
-    <li>wikidata_id: <%= player.wikidata_id %></li>
+    <li>wikidata_id: <a href="https://www.wikidata.org/wiki/<%= player.wikidata_id %>"><%= player.wikidata_id %></a>
+    </li>
 </ul>
 
 
