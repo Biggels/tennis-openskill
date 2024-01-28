@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 
 app.get('/players', async (req, res) => {
     const players = await Player.find({});
-    console.log(players);
+    // console.log(players);
     const title = 'All Players';
 
     res.render('players/index', { title, players });
