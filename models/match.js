@@ -4,7 +4,7 @@ const matchSchema = new mongoose.Schema({
     tourney_id: String,
     tourney_name: String,
     surface: String,
-    draw_size: Number,
+    draw_size: String,
     tourney_level: String,
     tourney_date: {
         type: Date,

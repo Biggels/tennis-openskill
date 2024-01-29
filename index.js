@@ -1,4 +1,6 @@
 // TODO decide how to keep data in sync...git subtrees or something like that?
+// TODO add ATP (sep dbs? same db with sep collections like atp_players and wta_matches? i guess that would mean i would need wta_match and atp_match schemas, etc., seems clunky, maybe sep routes as well, but maybe some are combined, like player search)
+// TODO consider adding indexes for common queries
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
