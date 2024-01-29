@@ -65,6 +65,7 @@ playerSchema.pre('insertMany', function (next, docs) {
         }
     }
     next(); // i think if i don't call this, any potential other middleware won't run after this one
+    // it also means it won't continue on to the insertMany. so very important :P
 })
 
 // insertMany says it validates every document, but i guess that doesn't trigger validate middleware? that makes no sense...

@@ -11,7 +11,6 @@ mongoose.connect('mongodb://127.0.0.1:27017/tennis')
         console.log(err)
     })
 
-// TODO import 1968 matches to test
 // TODO import all matches...stich them together or just insertMany on each file? probably just insertMany on each file is fine
 const filePath = path.join(__dirname, '..', 'data', 'wta', 'wta_matches_1968.csv');
 // const filePath = '../data/wta/wta_matches_1968.csv'; // this is just here for when i'm using the node REPL

@@ -6,19 +6,22 @@ const matchSchema = new mongoose.Schema({
     surface: String,
     draw_size: Number,
     tourney_level: String,
-    tourney_date: Date,
+    tourney_date: {
+        type: Date,
+        required: true
+    },
     match_num: Number,
     winner_id: Number,
-    winner_seed: Number,
-    winner_entry: Number,
+    winner_seed: String,
+    winner_entry: String,
     winner_name: String,
     winner_hand: String,
     winner_ht: Number,
     winner_ioc: String,
     winner_age: Number,
     loser_id: Number,
-    loser_seed: Number,
-    loser_entry: Number,
+    loser_seed: String,
+    loser_entry: String,
     loser_name: String,
     loser_hand: String,
     loser_ht: Number,
@@ -50,6 +53,13 @@ const matchSchema = new mongoose.Schema({
     winner_rank_points: Number,
     loser_rank: Number,
     loser_rank_points: Number
+})
+
+matchSchema.pre('insertMany', function (next, docs) {
+    for (let doc of docs) {
+        doc.tourney_date = `${doc.tourney_date.slice(0, 4)}-${doc.tourney_date.slice(4, 6)}-${doc.tourney_date.slice(6, 8)}`;
+    }
+    next();
 })
 
 const Match = mongoose.model('Match', matchSchema);
