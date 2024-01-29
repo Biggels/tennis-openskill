@@ -12,7 +12,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/tennis')
         console.log(err)
     })
 
-
+// TODO test different approaches to see if there's a faster way (different batch sizes made no difference, but maybe the original await each file approach was faster. or maybe there's a way to do it more parallel)
 const importData = async function (tour) {
     await Match.deleteMany({});
     console.log('all matches deleted');
