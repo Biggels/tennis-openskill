@@ -12,22 +12,32 @@ mongoose.connect('mongodb://127.0.0.1:27017/tennis')
         console.log(err)
     })
 
-// TODO read all matches into array first, then insertMany on all at once; or do batches of insertManys without awaiting them, since not awaiting all of them uses too much memory
 
 const importData = async function (tour) {
     await Match.deleteMany({});
-    console.log('all data deleted');
+    console.log('all matches deleted');
     const dir = path.join(__dirname, '..', 'data', tour);
     const fileNames = fs.readdirSync(dir);
 
+    const matches = [];
     for (let fileName of fileNames) {
         if (fileName.startsWith(`${tour}_matches`)) {
             const filePath = path.join(__dirname, '..', 'data', tour, fileName); // if using REPL, you won't have __dirname, so just use `../data/${tour}/${fileName}`
-            const matches = csvToJson.fieldDelimiter(',').getJsonFromCsv(filePath);
-            await Match.insertMany(matches);
-            console.log(fileName, 'inserted');
+            const newMatches = csvToJson.fieldDelimiter(',').getJsonFromCsv(filePath);
+            matches.push(...newMatches);
+            console.log(fileName, 'pushed');
         }
     }
+    // inserting all 700k+ matches at once caused a memory error, so i'm batching them
+    const batchSize = 100000;
+    for (let i = 0; i < matches.length / batchSize; i++) {
+        const start = i * batchSize;
+        const end = start + batchSize;
+        const batch = matches.slice(start, end);
+        await Match.insertMany(batch);
+        console.log('batch', i, 'inserted');
+    }
+
     console.log('all matches inserted');
 
 }
