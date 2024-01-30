@@ -38,11 +38,14 @@ app.get('/players', async (req, res) => {
 app.get('/players/:id', async (req, res) => {
     const { id } = req.params;
     const player = await Player.findOne({ player_id: id });
+    const matches = await Match.find({ $or: [{ winner_id: id }, { loser_id: id }] });
     // TODO handle failure to find player with that id (missing player page with a button to go home? just redirect home?)
     const title = player.fullName;
 
-    res.render('players/show', { title, player });
+    res.render('players/show', { title, player, matches });
 })
+
+// TODO create index (paginated) and show routes for matches
 
 app.listen(3000, () => {
     console.log("i'm listening on port 3000");

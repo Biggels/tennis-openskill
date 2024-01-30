@@ -12,7 +12,14 @@
     </li>
 </ul>
 
-<!-- TODO add some of the player's recent matches -->
+<h2>Matches (<%= matches.length %>)</h2>
+<!-- TODO create nice table for matches info -->
+<ul>
+    <% for (let match of matches) { %>
+    <li><%= match.tourney_dateString %>| <%= match.tourney_name %>| <%= match.surface %></li>
+    <% } %>
+</ul>
+
 
 
 <%- include('../partials/foot') %>

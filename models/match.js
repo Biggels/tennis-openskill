@@ -55,6 +55,15 @@ const matchSchema = new mongoose.Schema({
     loser_rank_points: Number
 })
 
+matchSchema.virtual('tourney_dateString')
+    .get(function () {
+        try {
+            return this.tourney_date.toDateString();
+        } catch {
+            return null;
+        }
+    })
+
 matchSchema.pre('insertMany', function (next, docs) {
     for (let doc of docs) {
         doc.tourney_date = `${doc.tourney_date.slice(0, 4)}-${doc.tourney_date.slice(4, 6)}-${doc.tourney_date.slice(6, 8)}`;
