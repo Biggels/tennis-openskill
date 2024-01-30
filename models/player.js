@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Match = require('./match');
 
 const playerSchema = new mongoose.Schema({
     player_id: {
@@ -28,6 +29,22 @@ const playerSchema = new mongoose.Schema({
         type: String
     }
 })
+
+// tested out a virtual for getting player's matches (probably won't be friendly if it's returning a promise)
+// i can return the promise, but that doesn't help me, it doesn't actually resolve when i access the virtual field
+// b/c when i access the field i'm in the front end where we won't have access to the db to run the find (or maybe it's not allowed to at all, i'm not sure)
+// playerSchema.virtual('matches')
+//     .get(async function () {
+//         return Match.find({ $or: [{ winner_id: this.player_id }, { loser_id: this.player_id }] });
+//     })
+// maybe i can do a post find hook that finds the matches and adds them? maybe better to just have a custom method that i can call on demand, when i know it will work.
+playerSchema.methods.getMatches = async function () { // TODO add args to getMatches for filtering by surface, date, etc.
+    return Match.find({ $or: [{ winner_id: this.player_id }, { loser_id: this.player_id }] });
+}
+
+// TODO add other "get" methods for calculating other match related data like first and last match and date, length of career, matches in the last x time period, matches on each surface, etc.
+// these can build off of the improved version of getMatches, e.g. we have a getSurfaceCounts that wraps calls to getMatches('clay'), getMatches('hard'), etc....will need to think about how to organize
+
 
 playerSchema.virtual('fullName')
     .get(function () {

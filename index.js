@@ -1,5 +1,17 @@
 // TODO decide how to keep data in sync...git subtrees or something like that?
-// TODO add ATP (sep dbs? same db with sep collections like atp_players and wta_matches? i guess that would mean i would need wta_match and atp_match schemas, etc., seems clunky, maybe sep routes as well, but maybe some are combined, like player search)
+// TODO figure out how to add ATP 
+// (sep dbs? same db with sep collections like atp_players and wta_matches? i guess that would mean i would need wta_match and atp_match schemas, etc.,
+// seems clunky, b/c then i'd need to keep two copies of schemas updated...so maybe sep dbs would be better...can you connect to 2 dbs at once with mongoose?...
+// maybe sep routes as well, or a query param, like /players?tour=atp, or /search?tour=atp)
+// theoretically could combine all players into 1 collection, and all matches into 1 collection, but i don't think his data is set up to support that
+// would have to record tour for each document, and i don't think the player ids are unique between the 2 tours (indeed they are not, just double-checked, so that's out)
+// from some light research, it looks like it should be possible to do some kind of extending, so i could set up a base schema for player,
+// and then create 2 models from it, one for wta_player and one for atp_player, making any modifications if there are any
+// initially i think the 2 models would use exactly the same schema, so i wouldn't even need to extend anything
+// but one person suggested just spreading the parent schema into the child (...ParentSchema.obj), and then adding anything new to the child, if i need to do that
+// and actually mongoose has an add() method that makes this easier/more comprehensive (https://mongoosejs.com/docs/api/schema.html#Schema.prototype.add())
+// but yeah, initially i would just have to have 2 model compiling lines, ATPPlayer and WTAPlayer, that both use the same playerSchema, and that's probably fine
+// then i'll have to do some thinking about how to handle filtering the various routes, etc., but that should be doable, and at least i don't need to switch b/t dbs
 // TODO consider adding indexes for common queries
 const express = require('express');
 const path = require('path');
@@ -38,8 +50,9 @@ app.get('/players', async (req, res) => {
 app.get('/players/:id', async (req, res) => {
     const { id } = req.params;
     const player = await Player.findOne({ player_id: id });
-    const matches = await Match.find({ $or: [{ winner_id: id }, { loser_id: id }] });
     // TODO handle failure to find player with that id (missing player page with a button to go home? just redirect home?)
+    const matches = await player.getMatches();
+
     const title = player.fullName;
 
     res.render('players/show', { title, player, matches });
