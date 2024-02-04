@@ -40,7 +40,7 @@ const playerSchema = new mongoose.Schema({
 // maybe i can do a post find hook that finds the matches and adds them? maybe better to just have a custom method that i can call on demand, when i know it will work.
 playerSchema.methods.getMatches = async function () { // TODO add args to getMatches for filtering by surface, date, etc.
     return Match.find({ $or: [{ winner_id: this.player_id }, { loser_id: this.player_id }] });
-}
+} // should be able to do await player.getMatches.limit.skip.filter.sort.exec pattern, i think, because i think this returns a query
 
 // TODO add other "get" methods for calculating other match related data like first and last match and date, length of career, matches in the last x time period, matches on each surface, etc.
 // these can build off of the improved version of getMatches, e.g. we have a getSurfaceCounts that wraps calls to getMatches('clay'), getMatches('hard'), etc....will need to think about how to organize

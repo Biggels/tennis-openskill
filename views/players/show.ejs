@@ -14,6 +14,7 @@
 
 <h2>Matches (<%= matches.length %>)</h2>
 <!-- TODO create nice table for matches info -->
+<!-- TODO paginate player matches -->
 <ul>
     <% for (let match of matches) { %>
     <li><%= match.tourney_dateString %>| <%= match.tourney_name %>| <%= match.surface %></li>

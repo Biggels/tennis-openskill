@@ -1,7 +1,13 @@
 <%- include('../partials/head') %>
-<!-- TODO add pagination -->
-<!-- TODO add sorting, filtering...table library? -->
+<!-- TODO add sorting, filtering -->
 <h1><%= title %></h1>
+<span>Page <%= page + 1 %> of <%= maxPage + 1 %></span>
+<% if ( page > 0 ) { %>
+<span><a href="/players?page=<%= page - 1 %>&limit=<%= limit %>">Previous</a></span>
+<% } %>
+<% if ( page < maxPage ) { %>
+<span><a href="/players?page=<%= page + 1 %>&limit=<%= limit %>">Next</a></span>
+<% } %>
 <ul>
     <% for (let player of players) { %>
     <li><a href="/players/<%= player.player_id %>"><%= player.fullName %></a></li>

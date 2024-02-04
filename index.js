@@ -40,11 +40,15 @@ app.get('/', (req, res) => {
 })
 
 app.get('/players', async (req, res) => {
-    const players = await Player.find({});
-    // console.log(players);
-    const title = 'All Players';
+    // TODO look into session for pagination instead of query params
+    const playersCount = await Player.countDocuments({});
+    let limit = Math.min(Math.abs(req.query.limit), 100) || 50;
+    const maxPage = Math.floor(playersCount / limit);
+    let page = Math.min(Math.abs(req.query.page), maxPage) || 0;
 
-    res.render('players/index', { title, players });
+    const players = await Player.find({}).limit(limit).skip(page * limit).exec();
+    const title = 'All Players';
+    res.render('players/index', { title, players, playersCount, limit, page, maxPage });
 })
 
 app.get('/players/:id', async (req, res) => {
