@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
     res.send('hello! welcome to tennis!');
 })
 
-app.get('/players', async (req, res) => {
+app.get('/players', async (req, res) => { // this will likely eventually turn into the rating sorted leaderboard
     // TODO look into session for pagination instead of query params
     const playersCount = await Player.countDocuments({});
     let limit = Math.min(Math.abs(req.query.limit), 100) || 50;
@@ -63,6 +63,10 @@ app.get('/players/:id', async (req, res) => {
 })
 
 // TODO create index (paginated) and show routes for matches
+
+// TODO create player search (form in a partial that can be on every page, then a route to receive the search query, then need mongoose function that can actually do the search)
+// https://www.mongodb.com/docs/manual/core/link-text-indexes/#std-label-text-search-on-premises
+// https://stackoverflow.com/questions/28775051/best-way-to-perform-a-full-text-search-in-mongodb-and-mongoose
 
 app.listen(3000, () => {
     console.log("i'm listening on port 3000");
