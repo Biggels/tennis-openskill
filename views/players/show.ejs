@@ -14,7 +14,7 @@
 
 <h2>Matches (<%= matches.length %>)</h2>
 <!-- TODO create nice table for matches info -->
-<!-- TODO paginate player matches -->
+<!-- TODO paginate player matches (or maybe just show most recent 50 or something, not sure if i know how to paginate within a page like this, query params seem clunky, what if i have multiple tables on this page that need to be paginated?) -->
 <ul>
     <% for (let match of matches) { %>
     <li><%= match.tourney_dateString %>| <%= match.tourney_name %>| <%= match.surface %></li>
