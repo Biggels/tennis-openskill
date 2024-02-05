@@ -56,7 +56,7 @@ app.get('/players/:id', async (req, res) => {
     const player = await Player.findOne({ player_id: id });
     // TODO handle failure to find player with that id (missing player page with a button to go home? just redirect home?)
     const matches = await player.getMatches();
-
+    // const matches = player.getMatches().sort({ date: -1 }).exec(); // TODO figure out why this doesn't work, getMatches should be returning a query
     const title = player.fullName;
 
     res.render('players/show', { title, player, matches });

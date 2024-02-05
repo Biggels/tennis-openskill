@@ -45,6 +45,7 @@ playerSchema.index({ name_last: 'text', name_first: 'text' });
 playerSchema.methods.getMatches = async function () { // TODO add args to getMatches for filtering by surface, date, etc.
     return Match.find({ $or: [{ winner_id: this.player_id }, { loser_id: this.player_id }] });
 } // should be able to do await player.getMatches.limit.skip.filter.sort.exec pattern, i think, because i think this returns a query
+// that doesn't seem to work, need to investigate further, maybe i'm not really returning a query here the way i think i am...
 
 // TODO add other "get" methods for calculating other match related data like first and last match and date, length of career, matches in the last x time period, matches on each surface, etc.
 // these can build off of the improved version of getMatches, e.g. we have a getSurfaceCounts that wraps calls to getMatches('clay'), getMatches('hard'), etc....will need to think about how to organize
