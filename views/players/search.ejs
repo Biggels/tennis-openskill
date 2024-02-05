@@ -1,0 +1,8 @@
+<%- include('../partials/head') %>
+<h1><%= title %></h1>
+<ul>
+    <% for (let player of players) { %>
+    <li><a href="/players/<%= player.player_id %>"><%= player.fullName %></a></li>
+    <% } %>
+</ul>
+<%- include('../partials/foot') %>

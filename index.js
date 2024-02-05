@@ -64,9 +64,14 @@ app.get('/players/:id', async (req, res) => {
 
 // TODO create index (paginated) and show routes for matches
 
-// TODO create player search (form in a partial that can be on every page, then a route to receive the search query, then need mongoose function that can actually do the search)
-// https://www.mongodb.com/docs/manual/core/link-text-indexes/#std-label-text-search-on-premises
-// https://stackoverflow.com/questions/28775051/best-way-to-perform-a-full-text-search-in-mongodb-and-mongoose
+// note: mongo combines search terms with OR, so searching for first and last name will actually yield more results, not fewer
+app.get('/search', async (req, res) => {
+    const { query } = req.query;
+    const players = await Player.find({ $text: { $search: query } }, { score: { $meta: 'textScore' } }).sort({ score: { $meta: 'textScore' } }).limit(20).exec();
+    const title = `Search Results: ${query}`;
+
+    res.render('players/search', { title, players });
+})
 
 app.listen(3000, () => {
     console.log("i'm listening on port 3000");

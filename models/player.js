@@ -30,6 +30,10 @@ const playerSchema = new mongoose.Schema({
     }
 })
 
+// TODO create full name as actual property so i can index and search it?
+// actually mongodb docs say the index can cover multiple fields, so this may already work
+playerSchema.index({ name_last: 'text', name_first: 'text' });
+
 // tested out a virtual for getting player's matches (probably won't be friendly if it's returning a promise)
 // i can return the promise, but that doesn't help me, it doesn't actually resolve when i access the virtual field
 // b/c when i access the field i'm in the front end where we won't have access to the db to run the find (or maybe it's not allowed to at all, i'm not sure)
